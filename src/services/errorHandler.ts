@@ -11,12 +11,12 @@ const handleErrorResponse = (data: ErrorResponse, attempt: number, maxRetries: n
             throw new Error('Max retries reached. Please try again after some time.');
         }
     }
-
-    if (data.errorCode === INTERNAL_SERVER_ERROR) {
+    else if (data.errorCode === INTERNAL_SERVER_ERROR) {
         throw new Error('Internal server error occurred');
     }
-
-    return null;
+    else{
+        throw new Error('Unknown error occurred');
+    }
 };
 
 export default handleErrorResponse;

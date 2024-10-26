@@ -7,11 +7,7 @@ const fetchSeoRankings = async (keywords: string, url: string) => {
         body: JSON.stringify({ keywords, url }),
     });
 
-    if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    return response.json();
+    return response;
 };
 
 export default fetchSeoRankings;

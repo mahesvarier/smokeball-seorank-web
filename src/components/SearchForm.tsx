@@ -47,30 +47,29 @@ const SearchForm: React.FC<SearchFormProps> = ({ onResults, setLoading }) => {
 
   return (
     <form onSubmit={handleSubmit} className="search-form">
-      <div className="form-group">
-        <label>
-          Keywords:
-          <input
-            type="text"
-            value={keywords}
-            onChange={(e) => setKeywords(e.target.value)}
-          />
-        </label>
-        {keywordsError && <div className="error-message">{keywordsError}</div>}
+      <div className="input-group">
+        <input
+          type="text"
+          value={keywords}
+          onChange={(e) => setKeywords(e.target.value)}
+          className="input-keywords"
+          placeholder="Enter keywords"
+        />
+        {keywordsError && <span className="error-message">{keywordsError}</span>}
       </div>
-      <div className="form-group">
-        <label>
-          URL:
-          <input
-            type="text"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-          />
-        </label>
-        {urlError && <div className="error-message">{urlError}</div>}
+      <div className="input-group">
+        <input
+          type="text"
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          className="input-url"
+          placeholder="Enter URL"
+        />
+        {urlError && <span className="error-message">{urlError}</span>}
       </div>
-      <button type="submit" disabled={loading}>Search</button>
-      {loading && <Spinner />}
+      <button type="submit" disabled={loading}>
+        {loading ? <Spinner /> : 'Search'}
+      </button>
     </form>
   );
 };

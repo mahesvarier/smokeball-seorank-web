@@ -6,21 +6,31 @@ import fetchSeoRankings from "./seoRankingsApi";
 export const searchKeywords = async (keywords: string, url: string): Promise<string | undefined> => {
     const { maxRetries, initialDelay, multiplier } = getConfig();
 
-    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+    const fetchWithRetry = async (attempt: number): Promise<string | undefined> => {
         try {
-            const data: string | ErrorResponse = await fetchSeoRankings(keywords, url);
-
-            if (typeof data !== 'string') {
-                const retry = await handleErrorResponse(data, attempt, maxRetries, initialDelay, multiplier);
-                if (retry) continue;
+            const response = await fetchSeoRankings(keywords, url);
+            if (response.ok) {
+                const data: string = await response.text();
+                return data as string;
+            } else {
+                console.log("🚀 ~ searchKeywords ~ response:", response);
+                const errorData: ErrorResponse = await response.json();
+                if (response.status === 429 && attempt < maxRetries) {
+                    const retryDelay = initialDelay * Math.pow(multiplier, attempt);
+                    console.log(`Retrying in ${retryDelay}ms...`);
+                    await delay(retryDelay);
+                    return fetchWithRetry(attempt + 1);
+                } else {
+                    await handleErrorResponse(errorData, attempt, maxRetries, initialDelay, multiplier);
+                }
             }
-
-            return data as string;
         } catch (error) {
             console.error('Failed to fetch:', error);
-            if (attempt >= maxRetries) {
-                return 'Failed to fetch results. Please retry after sometime.';
-            }
+            return 'Failed to fetch results. Please retry after sometime.';
         }
-    }
+    };
+
+    return fetchWithRetry(0);
 };
