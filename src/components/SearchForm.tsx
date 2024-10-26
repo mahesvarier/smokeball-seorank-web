@@ -39,7 +39,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onResults, setLoading }) => {
 
     setLoading(true);
     setLoadingState(true);
-    const results = await searchKeywords(keywords, url);
+    const results = (await searchKeywords(keywords, url)) || '';
     onResults(results);
     setLoading(false);
     setLoadingState(false);

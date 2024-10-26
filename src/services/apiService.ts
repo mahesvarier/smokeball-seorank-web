@@ -1,22 +1,26 @@
-export const searchKeywords = async (keywords: string, url: string): Promise<string> => {
-    try {
-        const response = await fetch('https://localhost:5001/seo-rankings', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ keywords, url }),
-        });
+import { ErrorResponse } from "../models/ErrorResponse";
+import { getConfig } from "../common/common";
+import handleErrorResponse from "./errorHandler";
+import fetchSeoRankings from "./seoRankingsApi";
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+export const searchKeywords = async (keywords: string, url: string): Promise<string | undefined> => {
+    const { maxRetries, initialDelay, multiplier } = getConfig();
+
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+        try {
+            const data: string | ErrorResponse = await fetchSeoRankings(keywords, url);
+
+            if (typeof data !== 'string') {
+                const retry = await handleErrorResponse(data, attempt, maxRetries, initialDelay, multiplier);
+                if (retry) continue;
+            }
+
+            return data as string;
+        } catch (error) {
+            console.error('Failed to fetch:', error);
+            if (attempt >= maxRetries) {
+                return 'Failed to fetch results. Please retry after sometime.';
+            }
         }
-
-        const data = await response.json();
-        console.log("🚀 ~ searchKeywords ~ data:", data)
-        return data;
-    } catch (error) {
-        console.error('Failed to fetch:', error);
-        return 'Failed to fetch results';
     }
 };
