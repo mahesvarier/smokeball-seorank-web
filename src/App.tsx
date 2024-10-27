@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import SearchForm from './components/SearchForm';
+import Spinner from './components/Spinner';
 
 function App() {
   const [results, setResults] = useState<string | null>(null);
@@ -13,7 +14,7 @@ function App() {
         <h1>SEO Keyword Search</h1>
         <SearchForm onResults={setResults} setLoading={setLoading} />
         {loading ? (
-          <div className="spinner">Loading...</div>
+          <Spinner/>
         ) : (
           results && (
             <div>
