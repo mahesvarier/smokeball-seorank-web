@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
 import SearchForm from './components/SearchForm';
 import Spinner from './components/Spinner';

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { searchKeywords } from '../services/apiService';
-import Spinner from './Spinner';
 import './SearchForm.css';
 
 interface SearchFormProps {
