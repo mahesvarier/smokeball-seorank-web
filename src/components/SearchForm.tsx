@@ -68,7 +68,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onResults, setLoading }) => {
         {urlError && <span className="error-message">{urlError}</span>}
       </div>
       <button type="submit" disabled={loading}>
-        {loading ? <Spinner /> : 'Search'}
+        Search
       </button>
     </form>
   );
