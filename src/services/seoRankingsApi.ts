@@ -1,5 +1,6 @@
 const fetchSeoRankings = async (keywords: string, url: string) => {
     const baseUrl = process.env.API_BASE_URL || 'https://localhost:5001';
+    console.log("🚀 ~ fetchSeoRankings ~ baseUrl:", baseUrl)
     const response = await fetch(`${baseUrl}/seo-rankings`, {
         method: 'POST',
         headers: {
